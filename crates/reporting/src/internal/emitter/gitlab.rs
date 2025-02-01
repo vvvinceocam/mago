@@ -9,9 +9,11 @@ use crate::error::ReportingError;
 use crate::IssueCollection;
 use crate::Level;
 
+use super::utils::long_message;
+
 #[derive(Serialize)]
 struct CodeQualityIssue<'a> {
-    description: &'a str,
+    description: String,
     check_name: &'a str,
     fingerprint: String,
     severity: &'a str,
@@ -58,7 +60,7 @@ pub fn gitlab_format(
                 None => ("<unknown>".to_string(), 0),
             };
 
-            let description = issue.message.as_str();
+            let description = long_message(issue).replace('\n', "<br>");
 
             let check_name = issue.code.as_deref().unwrap_or("other");
 
