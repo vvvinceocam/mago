@@ -1,3 +1,4 @@
+use rules::no_empty_construct::NoEmptyConstruct;
 use rules::require_strict_behavior::RequireStrictBehavior;
 
 use crate::definition::PluginDefinition;
@@ -19,6 +20,6 @@ impl Plugin for StrictnessExtraPlugin {
     }
 
     fn get_rules(&self) -> Vec<Box<dyn Rule>> {
-        vec![Box::new(RequireStrictBehavior)]
+        vec![Box::new(RequireStrictBehavior), Box::new(NoEmptyConstruct)]
     }
 }
