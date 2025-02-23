@@ -1,3 +1,4 @@
+use rules::no_elvis_operator::NoElvisOperator;
 use rules::no_empty_construct::NoEmptyConstruct;
 use rules::require_strict_behavior::RequireStrictBehavior;
 
@@ -20,6 +21,6 @@ impl Plugin for StrictnessExtraPlugin {
     }
 
     fn get_rules(&self) -> Vec<Box<dyn Rule>> {
-        vec![Box::new(RequireStrictBehavior), Box::new(NoEmptyConstruct)]
+        vec![Box::new(NoElvisOperator), Box::new(NoEmptyConstruct), Box::new(RequireStrictBehavior)]
     }
 }
