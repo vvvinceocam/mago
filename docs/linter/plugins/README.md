@@ -18,6 +18,7 @@ Mago's linter supports a variety of plugins to improve code quality, enforce bes
 - [Redundancy](linter/plugins/redundancy.md): Detect and eliminate redundant code.
 - [Safety](linter/plugins/safety.md): Identify unsafe coding patterns.
 - [Strictness](linter/plugins/strictness.md): Apply strict coding rules for rigorous projects.
+- [Strictness Extra](linter/plugins/strictness-extra.md) _(Optional)_: Apply opinionated strict coding rules for rigorous projects.
 - [Symfony](linter/plugins/symfony.md) _(Optional)_: Enforce rules for Symfony projects.
 
 ---
