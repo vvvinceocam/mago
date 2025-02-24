@@ -26,21 +26,21 @@ impl Rule for NoEmptyConstruct {
             .with_example(RuleUsageExample::invalid(
                 "Using the `empty()` construct",
                 indoc! {r#"
-                            <?php
+                    <?php
 
-                            // ...
+                    // ...
 
-                            if (!empty($myArray)) {
-                                // ...
-                            }
-                        "#},
+                    if (!empty($myArray)) {
+                        // ...
+                    }
+                "#},
             ))
     }
 
     fn lint_node(&self, node: Node<'_>, context: &mut LintContext<'_>) -> LintDirective {
         let Node::EmptyConstruct(construct) = node else { return LintDirective::default() };
 
-        let issue = Issue::error("Use of the `empty()` function.")
+        let issue = Issue::error("Use of the `empty` construct.")
             .with_annotation(
                 Annotation::primary(construct.span()).with_message("Ambigous check due to `empty()` loose semantic."),
             )
