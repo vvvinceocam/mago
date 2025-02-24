@@ -27,7 +27,7 @@ impl Rule for NoElvisOperator {
                     <?php
 
                     $value = $foo ?: $default;
-                    "#},
+                "#},
             ))
     }
 
