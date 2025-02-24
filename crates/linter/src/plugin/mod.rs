@@ -17,7 +17,6 @@ pub mod redundancy;
 pub mod safety;
 pub mod security;
 pub mod strictness;
-pub mod strictness_extra;
 pub mod symfony;
 
 #[macro_export]
@@ -38,7 +37,6 @@ macro_rules! foreach_plugin {
         $do($crate::plugin::security::SecurityPlugin);
         $do($crate::plugin::strictness::StrictnessPlugin);
         $do($crate::plugin::symfony::SymfonyPlugin);
-        $do($crate::plugin::strictness_extra::StrictnessExtraPlugin);
     };
 }
 
