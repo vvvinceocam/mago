@@ -1,8 +1,8 @@
 use crate::definition::PluginDefinition;
 use crate::plugin::strictness::rules::missing_assert_description::MissingAssertDescriptionRule;
 use crate::plugin::strictness::rules::no_assignment_in_condition::NoAssignmentInConditionRule;
-use crate::plugin::strictness::rules::no_elvis_operator::NoElvisOperator;
 use crate::plugin::strictness::rules::no_empty_construct::NoEmptyConstruct;
+use crate::plugin::strictness::rules::no_shorthand_ternary::NoShorthandTernary;
 use crate::plugin::strictness::rules::require_constant_type::RequireConstantTypeRule;
 use crate::plugin::strictness::rules::require_identity_comparison::RequireIdentityComparisonRule;
 use crate::plugin::strictness::rules::require_parameter_type::RequireParameterTypeRule;
@@ -32,8 +32,8 @@ impl Plugin for StrictnessPlugin {
         vec![
             Box::new(MissingAssertDescriptionRule),
             Box::new(NoAssignmentInConditionRule),
-            Box::new(NoElvisOperator),
             Box::new(NoEmptyConstruct),
+            Box::new(NoShorthandTernary),
             Box::new(RequireConstantTypeRule),
             Box::new(RequireIdentityComparisonRule),
             Box::new(RequireParameterTypeRule),

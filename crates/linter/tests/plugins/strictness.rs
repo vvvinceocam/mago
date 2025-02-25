@@ -1,7 +1,7 @@
 use mago_linter::plugin::strictness::rules::missing_assert_description::MissingAssertDescriptionRule;
 use mago_linter::plugin::strictness::rules::no_assignment_in_condition::NoAssignmentInConditionRule;
-use mago_linter::plugin::strictness::rules::no_elvis_operator::NoElvisOperator;
 use mago_linter::plugin::strictness::rules::no_empty_construct::NoEmptyConstruct;
+use mago_linter::plugin::strictness::rules::no_shorthand_ternary::NoShorthandTernary;
 use mago_linter::plugin::strictness::rules::require_constant_type::RequireConstantTypeRule;
 use mago_linter::plugin::strictness::rules::require_identity_comparison::RequireIdentityComparisonRule;
 use mago_linter::plugin::strictness::rules::require_parameter_type::RequireParameterTypeRule;
@@ -14,8 +14,8 @@ use crate::rule_test;
 
 rule_test!(test_missing_assert_description, MissingAssertDescriptionRule);
 rule_test!(test_no_assignment_in_condition, NoAssignmentInConditionRule);
-rule_test!(test_no_elvis_operator, NoElvisOperator);
 rule_test!(test_no_empty_construct, NoEmptyConstruct);
+rule_test!(test_no_shorthand_ternary, NoShorthandTernary);
 rule_test!(test_require_constant_type, RequireConstantTypeRule);
 rule_test!(test_require_identity_comparison, RequireIdentityComparisonRule);
 rule_test!(test_require_parameter_type, RequireParameterTypeRule);
