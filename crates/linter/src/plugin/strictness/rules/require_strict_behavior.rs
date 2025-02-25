@@ -105,7 +105,7 @@ impl Rule for RequireStrictBehavior {
             return LintDirective::default();
         }
 
-        let issue = Issue::error(format!("Call to `{}` must enforce strict comparison.", function_name))
+        let issue = Issue::new(context.level(), format!("Call to `{}` must enforce strict comparison.", function_name))
             .with_annotation(Annotation::primary(identifier.span()).with_message(format!(
                 "Function `{}` relies on loose comparison which can lead to unexpected behavior.",
                 function_name

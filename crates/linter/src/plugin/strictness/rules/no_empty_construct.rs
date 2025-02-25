@@ -40,7 +40,7 @@ impl Rule for NoEmptyConstruct {
     fn lint_node(&self, node: Node<'_>, context: &mut LintContext<'_>) -> LintDirective {
         let Node::EmptyConstruct(construct) = node else { return LintDirective::default() };
 
-        let issue = Issue::error("Use of the `empty` construct.")
+        let issue = Issue::new(context.level(), "Use of the `empty` construct.")
             .with_annotation(
                 Annotation::primary(construct.span()).with_message("Ambigous check due to `empty()` loose semantic."),
             )
