@@ -44,13 +44,9 @@ impl Rule for NoEmptyConstruct {
             .with_annotation(
                 Annotation::primary(construct.span()).with_message("Ambigous check due to `empty()` loose semantic."),
             )
-            .with_help(indoc! {"
-                Use explicit checks instead of `empty()` to clearly convey your intent.
-
-                Specifically, use strict comparison operators and explicit functions like `is_null()`
-                or `array_key_exist()`. When handling multiple cases, consider combining these predicates
-                with logical operators.
-            "});
+            .with_note("`empty()` exhibits unexpected behavior on specific value.")
+            .with_note("It is unclear what codition is being treated with `empty()`.")
+            .with_help("Use strict comparison or specific predicate function to clearly convey your intent.");
 
         context.report(issue);
 
