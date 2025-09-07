@@ -7,6 +7,9 @@ use mago_codex::ttype::atomic::object::r#enum::TEnum;
 use mago_codex::ttype::atomic::scalar::TScalar;
 use mago_codex::ttype::atomic::scalar::class_like_string::TClassLikeString;
 use mago_codex::ttype::atomic::scalar::class_like_string::TClassLikeStringKind;
+use mago_codex::ttype::expander;
+use mago_codex::ttype::expander::StaticClassType;
+use mago_codex::ttype::expander::TypeExpansionOptions;
 use mago_codex::ttype::get_class_string;
 use mago_codex::ttype::get_mixed;
 use mago_codex::ttype::union::TUnion;
@@ -166,7 +169,10 @@ fn handle_class_magic_constant<'ctx, 'ast, 'arena>(
         Some(fq_class_id) => {
             artifacts.symbol_references.add_reference_to_symbol(&block_context.scope, fq_class_id, false);
 
-            if class_resolution.is_named() {
+            if class_resolution.is_final
+                || class_resolution.is_from_literal_class_string()
+                || class_resolution.is_named()
+            {
                 TScalar::ClassLikeString(TClassLikeString::literal(fq_class_id))
             } else {
                 TScalar::ClassLikeString(TClassLikeString::of_type(
@@ -191,12 +197,24 @@ fn find_constant_in_class<'ctx>(
 ) -> Option<ResolvedConstant> {
     // Check for a defined constant
     if let Some(constant_metadata) = metadata.constants.get(&const_name) {
-        let const_type = constant_metadata
+        let mut const_type = constant_metadata
             .inferred_type
             .clone()
             .map(wrap_atomic)
             .or_else(|| constant_metadata.type_metadata.clone().map(|s| s.type_union))
             .unwrap_or_else(get_mixed);
+
+        expander::expand_union(
+            context.codebase,
+            &mut const_type,
+            &TypeExpansionOptions {
+                self_class: Some(metadata.name),
+                static_class_type: StaticClassType::Name(metadata.name),
+                parent_class: metadata.direct_parent_class,
+                function_is_final: metadata.flags.is_final(),
+                ..Default::default()
+            },
+        );
 
         return Some(ResolvedConstant { const_type });
     }

@@ -41,10 +41,10 @@ use crate::ttype::union::TUnion;
 use crate::visibility::Visibility;
 
 #[inline]
-pub fn register_anonymous_class<'ctx, 'ast, 'arena>(
+pub fn register_anonymous_class<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
-    class: &'ast AnonymousClass<'arena>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    class: &'arena AnonymousClass<'arena>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<(Atom, TemplateConstraintList)> {
     let span = class.span();
@@ -78,10 +78,10 @@ pub fn register_anonymous_class<'ctx, 'ast, 'arena>(
 }
 
 #[inline]
-pub fn register_class<'ctx, 'ast, 'arena>(
+pub fn register_class<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
-    class: &'ast Class<'arena>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    class: &'arena Class<'arena>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<(Atom, TemplateConstraintList)> {
     let class_like_metadata = scan_class_like(
@@ -114,10 +114,10 @@ pub fn register_class<'ctx, 'ast, 'arena>(
 }
 
 #[inline]
-pub fn register_interface<'ctx, 'ast, 'arena>(
+pub fn register_interface<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
-    interface: &'ast Interface<'arena>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    interface: &'arena Interface<'arena>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<(Atom, TemplateConstraintList)> {
     let class_like_metadata = scan_class_like(
@@ -150,10 +150,10 @@ pub fn register_interface<'ctx, 'ast, 'arena>(
 }
 
 #[inline]
-pub fn register_trait<'ctx, 'ast, 'arena>(
+pub fn register_trait<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
-    r#trait: &'ast Trait<'arena>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    r#trait: &'arena Trait<'arena>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<(Atom, TemplateConstraintList)> {
     let class_like_metadata = scan_class_like(
@@ -186,10 +186,10 @@ pub fn register_trait<'ctx, 'ast, 'arena>(
 }
 
 #[inline]
-pub fn register_enum<'ctx, 'ast, 'arena>(
+pub fn register_enum<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
-    r#enum: &'ast Enum<'arena>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    r#enum: &'arena Enum<'arena>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<(Atom, TemplateConstraintList)> {
     let class_like_metadata = scan_class_like(
@@ -223,19 +223,19 @@ pub fn register_enum<'ctx, 'ast, 'arena>(
 
 #[inline]
 #[allow(clippy::too_many_arguments)]
-fn scan_class_like<'ctx, 'ast, 'arena>(
+fn scan_class_like<'ctx, 'arena>(
     codebase: &mut CodebaseMetadata,
     name: Atom,
     kind: SymbolKind,
     name_span: Option<Span>,
     span: Span,
-    attribute_lists: &'ast Sequence<'arena, AttributeList<'arena>>,
-    modifiers: Option<&'ast Sequence<Modifier<'arena>>>,
-    members: &'ast Sequence<ClassLikeMember<'arena>>,
-    extends: Option<&'ast Extends<'arena>>,
-    implements: Option<&'ast Implements<'arena>>,
-    enum_type: Option<&'ast EnumBackingTypeHint<'arena>>,
-    context: &mut Context<'ctx, 'ast, 'arena>,
+    attribute_lists: &'arena Sequence<'arena, AttributeList<'arena>>,
+    modifiers: Option<&'arena Sequence<Modifier<'arena>>>,
+    members: &'arena Sequence<ClassLikeMember<'arena>>,
+    extends: Option<&'arena Extends<'arena>>,
+    implements: Option<&'arena Implements<'arena>>,
+    enum_type: Option<&'arena EnumBackingTypeHint<'arena>>,
+    context: &mut Context<'ctx, 'arena>,
     scope: &mut NamespaceScope,
 ) -> Option<ClassLikeMetadata> {
     let original_name = name;
@@ -320,6 +320,10 @@ fn scan_class_like<'ctx, 'ast, 'arena>(
             codebase.symbols.add_enum_name(name);
         }
         SymbolKind::Trait => {
+            if class_like_metadata.attributes.iter().any(|attr| attr.name.eq_ignore_ascii_case("Deprecated")) {
+                class_like_metadata.flags |= MetadataFlags::DEPRECATED;
+            }
+
             codebase.symbols.add_trait_name(name);
         }
         SymbolKind::Interface => {
@@ -781,11 +785,7 @@ fn scan_class_like<'ctx, 'ast, 'arena>(
                 Ok(inheritors_union) => {
                     for inheritor in inheritors_union.types.as_ref() {
                         match inheritor {
-                            TAtomic::Reference(TReference::Symbol {
-                                name,
-                                parameters: None,
-                                intersection_types: None,
-                            }) => {
+                            TAtomic::Reference(TReference::Symbol { name, intersection_types: None, .. }) => {
                                 class_like_metadata
                                     .permitted_inheritors
                                     .get_or_insert_default()

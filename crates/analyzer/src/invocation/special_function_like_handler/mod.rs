@@ -5,14 +5,17 @@ use crate::context::Context;
 use crate::context::block::BlockContext;
 use crate::invocation::Invocation;
 use crate::invocation::special_function_like_handler::core::closure::GetCurrentClosureMethodHandler;
+use crate::invocation::special_function_like_handler::psl::regex_component::RegexComponentFunctionsHandler;
 use crate::invocation::special_function_like_handler::psl::str_component::StrComponentFunctionsHandler;
 use crate::invocation::special_function_like_handler::psl::type_component::TypeComponentFunctionsHandler;
 use crate::invocation::special_function_like_handler::random::RandomFunctionsHandler;
+use crate::invocation::special_function_like_handler::spl::iterator::IteratorFunctionsHandler;
 use crate::invocation::special_function_like_handler::standard::string::StringFunctionsHandler;
 
 mod core;
 mod psl;
 mod random;
+mod spl;
 mod standard;
 mod utils;
 
@@ -38,11 +41,14 @@ pub fn handle_special_functions<'ctx, 'ast, 'arena>(
         &GetCurrentClosureMethodHandler,
         // Standard PHP function handlers
         &StringFunctionsHandler,
+        // SPL function handlers
+        &IteratorFunctionsHandler,
         // Random extension function handlers
         &RandomFunctionsHandler,
         // PSL specific function handlers
         &StrComponentFunctionsHandler,
         &TypeComponentFunctionsHandler,
+        &RegexComponentFunctionsHandler,
     ];
 
     let function_like_identifier = invocation.target.get_function_like_identifier()?;
